@@ -15,4 +15,4 @@ if __name__ == '__main__':
         # scrape関数によりスクレイピングとクレンジングを行う
         text, title = scrape.scrape(html)
         print('[title]: ', title)
-        print('[text]:  ', text[:300])
+        print('[text]:  ', text[:1000])
