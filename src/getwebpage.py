@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 if __name__ == '__main__':
     # 日本のウィキペディアページを指定
     url = 'https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC'
+    # ファイルの読み込み時にwith構文内で記述することによりcloseを指定する必要が無い
     with urllib.request.urlopen(url) as res:
         byte = res.read()
         # 文字コードの変換
