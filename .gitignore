@@ -1,3 +1,5 @@
-data/
+data/brat
+data/sqlite3
+data/wikipedia
 packages/
 solr-8.2.0/
