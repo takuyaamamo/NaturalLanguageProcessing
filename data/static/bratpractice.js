@@ -1,7 +1,10 @@
-var bratLocation = './third/brat';
+var bratLocation = './file/third/brat';
+
+// head.jsでbrad関連ライブラリを読み込む
 head.js(
   // External libraries
-  bratLocation + '/client/lib/jquery.min.js',
+  bratLocation + '/client/lib/jquery-1.7.1.min.js',
+  bratLocation + '/client/lib/jquery-ui.min.js',
   bratLocation + '/client/lib/jquery.svg.min.js',
   bratLocation + '/client/lib/jquery.svgdom.min.js',
 
@@ -18,6 +21,7 @@ head.js(
 );
 
 var brat_dispatcher = undefined;
+// head.readyでUtil.embed関数でアノテーションの表示部を作成する
 head.ready(function() {
   brat_dispatcher = Util.embed('brat', {}, {'text': ''}, []);
 });
@@ -33,6 +37,7 @@ var brat = new Vue({
         {'params': {
         }},
       ).then(response => {
+        // brat_dispatcher.postによりサーバーサイトのプログラムから返されたJSON形式のデータをアノテーション表示部に渡している。
         brat_dispatcher.post('collectionLoaded',
           [response.body.collection]);
         brat_dispatcher.post('requestRenderData',
