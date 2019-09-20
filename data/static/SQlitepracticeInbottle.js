@@ -1,7 +1,7 @@
 var bratLocation = '/file/third/brat';
 head.js(
   // External libraries
-  bratLocation + '/client/lib/jquery.min.js',
+  bratLocation + '/client/lib/jquery-1.7.1.min.js',
   bratLocation + '/client/lib/jquery.svg.min.js',
   bratLocation + '/client/lib/jquery.svgdom.min.js',
 
@@ -22,6 +22,7 @@ head.ready(function() {
   brat_dispatcher = Util.embed('brat', {}, {'text': ''}, []);
 });
 
+// 初期値を入れておく
 var brat = new Vue({
   el: '#brat',
   data: {
@@ -32,6 +33,7 @@ var brat = new Vue({
     run: function() {
       this.$http.get(
         '/get',
+        // getのパラメータにはidとnamesを送っている
         {'params': {
           'id':       this.id,
           'names':    this.names,
