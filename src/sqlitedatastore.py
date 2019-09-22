@@ -8,7 +8,7 @@ def connect():
     # global変数でconnを呼び出し
     global conn
     # データベースの場所を指定
-    conn = sqlite3.connect('../data/sqlite3/sqlite3')
+    conn = sqlite3.connect('/vagrant/NaturalLanguageProcessing/data/sqlite3/sqlite3')
 
 # データベース接続終了
 def close():
@@ -55,9 +55,7 @@ def get_all_ids(limit, offset=0):
             # conn.execute('SELECT id FROM docs LIMIT ? OFFSET ?',(limit, offset))]
 
 def set_annotation(doc_id, name, value):
-    conn.execute(
-        'UPDATE docs SET {0} = ? where id = ?'.format(name),
-        (json.dumps(value), doc_id))
+    conn.execute(f'UPDATE docs SET {name} = {json.dumps(value)} where id = {doc_id}')
     conn.commit()
 
 # アノテーションを取得
