@@ -34,3 +34,31 @@ def solr_load(collection, data):
     with opener.open(req) as res:
         # データを確認
         print(res.read().decode('utf-8'))
+        
+# solrプログラムから検索を行う関数
+def search(keywords, rows=100):
+    # keywordsは2重のリストとなる。ためkeywordsをgroup、groupをkeywordに
+    query = ' AND '.join([
+        # 内側のリストは「OR検索したい語」のリスト
+        '(' + ' OR '.join([f'content_txt_ja:"{keyword}"' for keyword in group])
+        # 外側のリストは「AND検索したいグループ」のリスト
+        + ')' for group in keywords
+    ])
+    # 検索クエリの作成content_txt_jaフィールドを検索するクエリを作成する。
+    data = {
+        'q':     query,
+        'wt':    'json',
+        'rows':  rows,
+        'hl':    'on',
+        'hl.fl': 'content_txt_ja',
+    }
+    # 検索リクエストの作成（＊１）
+    req = urllib.request.Request(
+        # Solrでの検索APIは/select
+        url=f'{solr_url}/doc/select',
+        # JSON形式のデータをdataとして指定
+        data=urllib.parse.urlencode(data).encode('utf-8'),)
+    # 検索リクエストの実行（＊２）
+    with opener.open(req) as res:
+        # UTF-8のバイト列からUnicode文字列からなるstr型に変換し、JSON形式の文字列とみなしてdict型に変換したものを返す
+        return json.loads(res.read().decode('utf-8'))
