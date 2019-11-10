@@ -8,7 +8,7 @@ solr_url = 'http://localhost:8983/solr'
 opener = urllib.request.build_opener(urllib.request.ProxyHandler())
 
 # Solrにデータを登録する関数、引数dataは登録するdataをdictで指定
-def solr_load(collection, data):
+def load(collection, data):
     
     # Solrのコアに対してデータを登録するリクエストを作成,collectionにはデータ登録先のコア名を指定している
     url='{0}/{1}/update'.format(solr_url, collection)
@@ -56,6 +56,33 @@ def search(keywords, rows=100):
     req = urllib.request.Request(
         # Solrでの検索APIは/select
         url=f'{solr_url}/doc/select',
+        # JSON形式のデータをdataとして指定
+        data=urllib.parse.urlencode(data).encode('utf-8'),)
+    # 検索リクエストの実行（＊２）
+    with opener.open(req) as res:
+        # UTF-8のバイト列からUnicode文字列からなるstr型に変換し、JSON形式の文字列とみなしてdict型に変換したものを返す
+        return json.loads(res.read().decode('utf-8'))
+
+# アノテーションを見つける関数
+def search_annotation(fl_keyword_pairs, rows=100):
+    # fl_keyword_pairsは2重のリストとなる。ためfl_keyword_pairsをgroup、groupをkeywordに
+    query = ' AND '.join([
+        # 内側のリストは「OR検索したい語」のリスト
+        '(' + ' OR '.join([f'{fl}:"{keyword}"' for keyword in group])
+        # 外側のリストは「AND検索したいグループ」のリスト
+        + ')' for fl, keywords in fl_keyword_pairs
+            for group in keywords
+    ])
+    # 検索クエリの作成content_txt_jaフィールドを検索するクエリを作成する。
+    data = {
+        'q':     query,
+        'wt':    'json',
+        'rows':  rows,
+    }
+    # 検索リクエストの作成（＊１）
+    req = urllib.request.Request(
+        # Solrでの検索APIは/select
+        url=f'{solr_url}/anno/select',
         # JSON形式のデータをdataとして指定
         data=urllib.parse.urlencode(data).encode('utf-8'),)
     # 検索リクエストの実行（＊２）
