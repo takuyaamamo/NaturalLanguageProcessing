@@ -5,7 +5,7 @@ let main = new Vue({
     name: 'affiliation',//<input type="text" v-model="name" />に対応しテキストフィールドの中の文字列を表す。
     keywords: 'インド',//<input type="text" v-model="keywords" />に対応しテキストフィールドの中の文字列を表す。
     result: {},//<div>{{ result }}</div>に対応し、div中の変数に該当する
-    hl: {},
+    // hl: {},
   },
 
   methods: {
@@ -21,7 +21,7 @@ let main = new Vue({
       ).then(response => {
         // this.result = response.body.responseによりサーバーサイドから返されたJSONのresponseの値をresult変数に代入する。これがそのまま<div>{{ result }}</div>に表示される
         this.result = response.body.response;
-        this.hl = response.body.highlighting;
+        // this.hl = response.body.highlighting;
         console.log(this.result);
       }, response => {
         console.log("NG");
