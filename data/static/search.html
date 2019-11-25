@@ -4,18 +4,30 @@
 </style>
 
 <div id="main">
-  annotation name: <input type="text" v-model="name"/><br/>
+  <!-- annotation name: <input type="text" v-model="name"/><br/> -->
   keywords: <input type="text" v-model="keywords"/><br/>
-  <button v-on:click="run">Search</button><br/>
+
+  classifier: <input type="radio" id="ml" value="ml" v-model="classifier">
+              <label for="ml">教師あり学習（SVM）</label>
+              <input type="radio" id="dl" value="dl" v-model="classifier">
+              <label for="dl">ディープラーニング</label>
+              <input type="radio" id="rule" value="rule" v-model="classifier">
+              <label for="rule">ルールベース</label>
+  <br/>
+  <button v-on:click="run">Search</button>
+  <br/>
   <!-- resultのnumFoundで見つかった件数を表示する -->
-  {{ result.numFound }}<br/>
-  <table border=1, style="border-collapse: collapse">
+  {{ result.numFound }}
+  <br/>
+  <table border=1 style="border-collapse: collapse">
     <!-- v-forで検索で見つかったドキュメントの文だけループを回す -->
+    <!-- v-ifでrow.predicted==1のときのみ表示する -->
     <!-- result.docsの配列の要素が繰り返しrowに代入されていく -->
-    <tr v-for="(row, _index) in result.docs">
+    <tr v-for="(row, _) in result.docs" v-if="row.predicted==1">
       <td>{{ row.doc_id_i }}</td>
-      <td>{{ row[name + '_txt_ja'] }}</td>
-      <td><a v-bind:href="row.url_s">{{ row.title_txt_ja }}</a></td>
+      <!-- <td>{{ row[name + '_txt_ja'] }}</td> -->
+      <!-- <td><a v-bind:href="row.url_s">{{ row.title_txt_ja }}</a></td> -->
+      <td>{{ row.title_txt_ja }}</td>
       <td>{{ row.sentence_txt_ja }}</td>
       <!-- 文書中の検索キーワードを含む部分をスニペットとして表示する -->
       <!-- SolrがHTML形式でデータを返す為、v-htmlでHTMLを埋め込む指示をする -->
@@ -23,6 +35,7 @@
     </tr>
   </table>
 </div>
+<br/>
 
 <script src="https://unpkg.com/vue"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
